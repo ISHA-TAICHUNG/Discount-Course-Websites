@@ -20,8 +20,8 @@
 // 設定區
 // ============================================
 
-const SHEET_ID = 'YOUR_GOOGLE_SHEET_ID';  // 替換為您的 Google Sheet ID
-const TOKEN = 'YOUR_SECURE_TOKEN_HERE';    // 替換為安全的 token
+const SHEET_ID = '1knWuxEmq-LEZmMuxmGxWhj1IvvxOPE7yXXbOkuGBCNo';
+const TOKEN = 'isha-course-api-2026';
 
 // Sheet 名稱
 const SHEET_COURSES = 'Courses';
@@ -342,4 +342,212 @@ function initializeSheets() {
     }
     
     console.log('Sheets initialized successfully!');
+}
+
+// ============================================
+// 課程自動同步功能
+// ============================================
+
+/**
+ * 課程來源設定
+ * 每個課程類型對應 isha.org.tw 的查詢 key
+ */
+const COURSE_SOURCES = {
+    // Downtown (復興/忠明) 教室 - UnitCd=H001
+    'Downtown': [
+        { name: '職業安全衛生管理員', hours: 115, key: 'IGFuZCBDb3VyTmFtZSBsaWtlIE4nJeiBt+alreWuieWFqOihm+eUn+euoeeQhuWToeWuiSUnIGFuZCBVbml0Q2Q9J0gwMDEn' },
+        { name: '職業安全管理師', hours: 43, key: 'IGFuZCBDb3VyTmFtZSBsaWtlIE4nJeiBt+alreWuieWFqOeuoeeQhuW4q+WuieWFqOihmyUnIGFuZCBVbml0Q2Q9J0gwMDEn' },
+        { name: '甲種業務主管', hours: 42, key: 'IGFuZCBDb3VyTmFtZSBsaWtlIE4nJeeUsueoruiBt+alreWuieWFqOihm+eUn+alreWLmSUnIGFuZCBVbml0Q2Q9J0gwMDEn' },
+        { name: '乙種業務主管', hours: 35, key: 'IGFuZCBDb3VyTmFtZSBsaWtlIE4nJeS5meeoruiBt+alreWuieWFqOihm+eUn+alreWLmSUnIGFuZCBVbml0Q2Q9J0gwMDEn' },
+        { name: '丙種業務主管', hours: 21, key: 'IGFuZCBDb3VyTmFtZSBsaWtlIE4nJeS4meeoruiBt+alreWuieWFqOihm+eUn+alreWLmSUnIGFuZCBVbml0Q2Q9J0gwMDEn' },
+        { name: '急救人員', hours: 16, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXmgKXmlZElJyBhbmQgVW5pdENkPSdIMDAxJw==' },
+        { name: '堆高機操作人員', hours: 18, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXloIbpq5jmqZ8lJyBhbmQgVW5pdENkPSdIMDAxJw==' },
+        { name: '有機溶劑作業主管', hours: 18, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXmnInmqZ8lJyBhbmQgVW5pdENkPSdIMDAxJw==' },
+        { name: '缺氧作業主管', hours: 18, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXnvLrmsKclJyBhbmQgVW5pdENkPSdIMDAxJw==' },
+        { name: '高空工作車操作人員', hours: 16, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXpq5jnqbolJyBhbmQgVW5pdENkPSdIMDAxJw==' },
+    ],
+    // 龍井教室 - UnitCd=Y001
+    '龍井': [
+        { name: '職業安全衛生管理員', hours: 115, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXnrqHnkIblk6ElJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '職業安全管理師', hours: 43, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXlronlhajnrqHnkIbluKslJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '甲種業務主管', hours: 42, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXnlLLnqK4lJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '丙種業務主管', hours: 21, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXkuJnnqK4lJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '急救人員', hours: 16, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXmgKXmlZElJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '堆高機操作人員', hours: 18, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXloIbpq5jmqZ8lJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '有機溶劑作業主管', hours: 18, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXmnInmqZ8lJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '缺氧作業主管', hours: 18, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXnvLrmsKclJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '高空工作車操作人員', hours: 16, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXpq5jnqbolJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+        { name: '吊籠作業人員', hours: 26, key: 'IGFuZCAoQ2xzVHlwZUNEPD4nMTQnIEFORCBDb3VyTmFtZSBOT1QgbGlrZSAnJeikh+iokyUnKSBhbmQgQ291ck5hbWUgbGlrZSBOJyXlkIrnsaAlJyBhbmQgVW5pdENkPSdZMDAxJw==' },
+    ]
+};
+
+/**
+ * 同步課程資料（從 isha.org.tw 抓取）
+ * 可手動執行或設定定時觸發
+ */
+function syncCourses() {
+    const ss = SpreadsheetApp.openById(SHEET_ID);
+    let coursesSheet = ss.getSheetByName(SHEET_COURSES);
+    
+    // 若不存在則建立
+    if (!coursesSheet) {
+        coursesSheet = ss.insertSheet(SHEET_COURSES);
+        coursesSheet.appendRow([
+            'course_id', 'location', 'course_name', 'price', 'hours',
+            'session_id', 'date', 'quota', 'remaining'
+        ]);
+    }
+    
+    // 清除舊資料（保留標題列）
+    const lastRow = coursesSheet.getLastRow();
+    if (lastRow > 1) {
+        coursesSheet.deleteRows(2, lastRow - 1);
+    }
+    
+    let courseIdCounter = 1;
+    
+    // 遍歷所有教室和課程
+    for (const [location, courses] of Object.entries(COURSE_SOURCES)) {
+        for (const courseInfo of courses) {
+            try {
+                const sessions = fetchCourseSessions(courseInfo.key);
+                
+                if (sessions.length === 0) continue;
+                
+                const courseId = `${location === 'Downtown' ? 'DT' : 'LJ'}-${String(courseIdCounter).padStart(3, '0')}`;
+                
+                for (const session of sessions) {
+                    coursesSheet.appendRow([
+                        courseId,
+                        location,
+                        courseInfo.name,
+                        session.price,
+                        courseInfo.hours,
+                        session.sessionId,
+                        session.date,
+                        session.quota,
+                        session.remaining
+                    ]);
+                }
+                
+                courseIdCounter++;
+                
+                // 避免過度請求
+                Utilities.sleep(500);
+                
+            } catch (error) {
+                console.error(`Error fetching ${courseInfo.name}:`, error);
+            }
+        }
+    }
+    
+    console.log('課程同步完成！');
+}
+
+/**
+ * 從 isha.org.tw 抓取指定課程的梯次資料
+ */
+function fetchCourseSessions(key) {
+    const url = `https://isha.org.tw/Msite/tech/serch.aspx?key=${key}`;
+    
+    try {
+        const response = UrlFetchApp.fetch(url, {
+            muteHttpExceptions: true,
+            followRedirects: true
+        });
+        
+        const html = response.getContentText();
+        return parseCourseSessions(html);
+        
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return [];
+    }
+}
+
+/**
+ * 解析 HTML 取得課程梯次資料
+ */
+function parseCourseSessions(html) {
+    const sessions = [];
+    
+    // 匹配課程區塊：WorkLogID、開課日期、課程費用
+    // 格式：開課日期：YYYMMDD-YYYMMDD，課程費用：XX,XXX元
+    const blockPattern = /WorkLogID=(\w+)[\s\S]*?開課日期：(\d{7})-(\d{7})[\s\S]*?課程費用：([\d,]+)元/g;
+    
+    let match;
+    while ((match = blockPattern.exec(html)) !== null) {
+        const workLogId = match[1];
+        const startDate = formatROCDate(match[2]);
+        const endDate = formatROCDate(match[3]);
+        const price = parseInt(match[4].replace(/,/g, ''));
+        
+        // 從文字推估名額
+        const remaining = estimateRemaining(html, workLogId);
+        
+        sessions.push({
+            sessionId: workLogId,
+            date: `${startDate} - ${endDate}`,
+            price: price,
+            quota: 30,  // 預設名額
+            remaining: remaining
+        });
+    }
+    
+    return sessions;
+}
+
+/**
+ * 將民國年日期 (YYYMMDD) 轉換為 YYYY/MM/DD 格式
+ */
+function formatROCDate(rocDate) {
+    const year = parseInt(rocDate.substring(0, 3)) + 1911;
+    const month = rocDate.substring(3, 5);
+    const day = rocDate.substring(5, 7);
+    return `${year}/${month}/${day}`;
+}
+
+/**
+ * 從 HTML 文字推估剩餘名額
+ */
+function estimateRemaining(html, workLogId) {
+    // 找到該梯次附近的文字
+    const pattern = new RegExp(`WorkLogID=${workLogId}[\\s\\S]{0,500}`, 'i');
+    const match = html.match(pattern);
+    
+    if (!match) return 30;
+    
+    const context = match[0];
+    
+    if (context.includes('額滿') && !context.includes('即將額滿')) {
+        return 0;
+    } else if (context.includes('即將額滿')) {
+        return 3;
+    } else if (context.includes('名額有限')) {
+        return 10;
+    } else {
+        return 30;
+    }
+}
+
+/**
+ * 設定每日自動同步（需手動執行一次來建立觸發器）
+ */
+function setupDailySync() {
+    // 移除舊的觸發器
+    const triggers = ScriptApp.getProjectTriggers();
+    for (const trigger of triggers) {
+        if (trigger.getHandlerFunction() === 'syncCourses') {
+            ScriptApp.deleteTrigger(trigger);
+        }
+    }
+    
+    // 建立新觸發器：每天凌晨 3 點執行
+    ScriptApp.newTrigger('syncCourses')
+        .timeBased()
+        .atHour(3)
+        .everyDays(1)
+        .create();
+    
+    console.log('每日同步觸發器已設定！');
 }

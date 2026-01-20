@@ -9,30 +9,30 @@
 const CONFIG = {
     // Google Apps Script Web App URL
     // 部署 Apps Script 後，將 URL 貼至此處
-    API_URL: 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL',
-    
+    API_URL: 'https://script.google.com/macros/s/AKfycbxbHMj-KtD84fyUKPkPnqKgEcbqLLnHeYw4-Mlkrc3W8oUubId8q6LGn7ACYfpW3Ow9/exec',
+
     // API Token（需與 Apps Script 端設定一致）
-    API_TOKEN: 'YOUR_SECURE_TOKEN_HERE',
-    
+    API_TOKEN: 'isha-course-api-2026',
+
     // 匯款資訊
     BANK_INFO: {
-        bank_name: '合作金庫銀行',
-        bank_code: '006',
-        branch: '台中分行',
-        account_number: '1234-567-890123',
-        account_name: '○○職業訓練中心'
+        bank_name: '臺灣銀行',
+        bank_code: '004',
+        branch: '公館分行',
+        account_number: '034001137799',
+        account_name: '社團法人中華民國工業安全衛生協會'
     },
-    
+
     // 匯款期限（天數）
     PAYMENT_DEADLINE_DAYS: 1,
-    
+
     // 優惠設定
     DISCOUNT: {
         rate: 0.8,  // 8折
         min_courses: 2,      // 最少課程數觸發
         min_persons: 2       // 最少人數觸發
     },
-    
+
     // 學歷選項
     EDUCATION_OPTIONS: [
         '國中（含以下）',
@@ -42,7 +42,7 @@ const CONFIG = {
         '碩士',
         '博士'
     ],
-    
+
     // 驗證規則
     VALIDATION: {
         // 身分證正則（台灣身分證格式）
