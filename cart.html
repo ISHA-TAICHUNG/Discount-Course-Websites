@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="購物車 - 確認您的課程選購項目">
+    <title>購物車 - 初訓課程報名系統</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">職安初訓課程</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">課程總覽</a>
+                <a href="cart.html" class="cart-btn">
+                    🛒 購物車
+                    <span class="cart-badge" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Title -->
+            <div class="page-title">
+                <h1>🛒 購物車</h1>
+                <p>確認您的課程選購項目</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="icon">🛒</div>
+                <h3>購物車是空的</h3>
+                <p>快去挑選課程吧！</p>
+                <a href="index.html" class="btn">瀏覽課程</a>
+            </div>
+
+            <!-- Cart Container -->
+            <div id="cartContainer" class="cart-container" style="display: none;">
+                <!-- Cart Header -->
+                <div class="cart-header">
+                    <span>課程資訊</span>
+                    <span>單價</span>
+                    <span>人數</span>
+                    <span>小計</span>
+                    <span></span>
+                </div>
+
+                <!-- Cart Items -->
+                <div id="cartItems"></div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>原價小計</span>
+                        <span id="subtotal">$0</span>
+                    </div>
+                    <div class="summary-row" id="discountRow" style="display: none;">
+                        <span>
+                            <span class="discount-badge">🎉 8 折優惠</span>
+                        </span>
+                        <span class="discount-amount" id="discountAmount">-$0</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>應付金額</span>
+                        <span id="totalAmount">$0</span>
+                    </div>
+
+                    <div id="discountHint"
+                        style="margin-top: 16px; padding: 12px; background: #fff3cd; border-radius: 8px; font-size: 14px; display: none;">
+                        💡 <strong>優惠提示：</strong>報名 2 門以上課程，或同課程 2 人以上報名，即享 8 折優惠！
+                    </div>
+
+                    <button type="button" class="checkout-btn" id="checkoutBtn">
+                        確認訂單，填寫報名資料 →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+
+</html>

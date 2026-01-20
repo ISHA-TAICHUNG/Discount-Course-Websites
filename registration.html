@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="報名資料填寫 - 請填寫受訓人員資料">
+    <title>報名資料 - 初訓課程報名系統</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">職安初訓課程</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">課程總覽</a>
+                <a href="cart.html" class="cart-btn">
+                    🛒 購物車
+                    <span class="cart-badge" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Title -->
+            <div class="page-title">
+                <h1>📝 報名資料填寫</h1>
+                <p>請填寫受訓人員資料</p>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                <form id="registrationForm">
+                    <!-- Order Summary Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <span class="icon">📋</span>
+                            訂單摘要
+                        </h2>
+                        <div id="orderSummary"></div>
+                    </div>
+
+                    <!-- Registrants Section -->
+                    <div class="form-section">
+                        <h2 class="form-section-title">
+                            <span class="icon">👤</span>
+                            受訓人員資料
+                        </h2>
+                        <div id="registrantsContainer"></div>
+                    </div>
+
+                    <!-- Privacy Notice -->
+                    <div class="privacy-notice">
+                        <h3>🔒 個人資料蒐集告知聲明</h3>
+                        <p>
+                            依據個人資料保護法規定，本機構蒐集您的個人資料（姓名、身分證字號、出生日期、聯絡資訊等）僅供課程報名、學員管理、核發證照之用途。
+                        </p>
+                        <p>
+                            您的資料將受到嚴格保護，不會提供予第三方。如需查詢、更正或刪除個人資料，請聯繫本機構客服。
+                        </p>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="privacyAgreed" required>
+                            <label for="privacyAgreed">我已閱讀並同意上述個資蒐集聲明<span class="required-mark">*</span></label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        送出報名 →
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 40px; border-radius: 16px; text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 16px; font-weight: 600;">正在送出報名資料...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/registration.js"></script>
+</body>
+
+</html>

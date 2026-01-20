@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="職業安全衛生初訓課程報名系統 - 提供多元化的職安培訓課程">
+    <title>初訓課程報名系統</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">職安初訓課程</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">課程總覽</a>
+                <a href="cart.html" class="cart-btn">
+                    🛒 購物車
+                    <span class="cart-badge" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Page Title -->
+            <div class="page-title">
+                <h1>職業安全衛生初訓課程</h1>
+                <p>專業訓練・取得證照・職場必備</p>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-location="all">全部課程</button>
+                <button class="filter-tab" data-location="Downtown">Downtown 教室</button>
+                <button class="filter-tab" data-location="龍井">龍井教室</button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- Course Grid -->
+            <div id="courseGrid" class="course-grid" style="display: none;"></div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="icon">📭</div>
+                <h3>目前無符合條件的課程</h3>
+                <p>請嘗試其他篩選條件</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/courses.js"></script>
+</body>
+</html>

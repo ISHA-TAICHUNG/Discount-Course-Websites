@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="繳費資訊 - 請依照匯款資訊完成繳費">
+    <title>繳費資訊 - 初訓課程報名系統</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">📚</div>
+                <span class="logo-text">職安初訓課程</span>
+            </a>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">課程總覽</a>
+                <a href="cart.html" class="cart-btn">
+                    🛒 購物車
+                    <span class="cart-badge" style="display: none;">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container payment-container">
+            <!-- Success Message -->
+            <div class="payment-card">
+                <div class="payment-header">
+                    <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                    <h2>報名成功！</h2>
+                    <p>請於期限內完成匯款</p>
+                </div>
+
+                <div class="payment-body">
+                    <!-- Order Info -->
+                    <div
+                        style="background: #e8f5e9; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
+                        <p style="font-size: 14px; color: #2e7d32; margin-bottom: 8px;">訂單編號</p>
+                        <p style="font-size: 20px; font-weight: 700; color: #1b5e20;" id="orderId">-</p>
+                    </div>
+
+                    <!-- Bank Info -->
+                    <div class="bank-info">
+                        <h3 style="margin-bottom: 16px; font-size: 16px; color: #1a73e8;">💳 匯款資訊</h3>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">銀行名稱</span>
+                            <span class="bank-info-value" id="bankName">-</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">銀行代碼</span>
+                            <span class="bank-info-value" id="bankCode">-</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">分行</span>
+                            <span class="bank-info-value" id="bankBranch">-</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">匯款帳號</span>
+                            <span class="bank-info-value" id="accountNumber">-</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">戶名</span>
+                            <span class="bank-info-value" id="accountName">-</span>
+                        </div>
+                        <div class="bank-info-row">
+                            <span class="bank-info-label">應繳金額</span>
+                            <span class="bank-info-value amount-highlight" id="totalAmount">$0</span>
+                        </div>
+                    </div>
+
+                    <!-- Deadline Warning -->
+                    <div class="deadline-warning">
+                        <span class="icon">⏰</span>
+                        <div>
+                            <strong>匯款期限</strong>
+                            <p style="margin-top: 4px; font-size: 14px;" id="deadline">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Payment Confirmation Form -->
+                    <h3 style="margin-bottom: 16px; font-size: 16px;">📝 匯款回填</h3>
+                    <p style="font-size: 14px; color: #5f6368; margin-bottom: 20px;">
+                        完成匯款後，請填寫以下資訊以便我們核對款項
+                    </p>
+
+                    <form id="paymentForm">
+                        <div class="form-group">
+                            <label class="form-label">匯款日期<span class="required-mark">*</span></label>
+                            <input type="date" class="form-input" id="paymentDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">匯款帳號後五碼<span class="required-mark">*</span></label>
+                            <input type="text" class="form-input" id="accountLast5" placeholder="請輸入您的匯款帳號後五碼"
+                                maxlength="5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">實際匯款金額<span class="required-mark">*</span></label>
+                            <input type="number" class="form-input" id="paymentAmount" placeholder="請輸入實際匯款金額" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="confirmBtn">
+                            確認回填
+                        </button>
+                    </form>
+
+                    <!-- Success Message (hidden by default) -->
+                    <div id="successMessage" style="display: none; text-align: center; padding: 40px;">
+                        <div style="font-size: 64px; margin-bottom: 16px;">🎉</div>
+                        <h3 style="font-size: 20px; margin-bottom: 12px;">感謝您的回填！</h3>
+                        <p style="color: #5f6368; margin-bottom: 24px;">
+                            我們將儘速核對您的匯款，確認後會以 Email 通知您。
+                        </p>
+                        <a href="index.html" class="btn"
+                            style="display: inline-block; padding: 14px 32px; background: #1a73e8; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                            返回首頁
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+
+</html>
