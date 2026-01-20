@@ -11,11 +11,12 @@ const API = {
      */
     async request(action, data = {}) {
         try {
-            // 建立查詢參數
+            // 建立查詢參數（含 referer 供後端驗證）
             const params = new URLSearchParams({
                 token: CONFIG.API_TOKEN,
                 action: action,
-                data: JSON.stringify(data)
+                data: JSON.stringify(data),
+                referer: window.location.origin
             });
 
             const url = `${CONFIG.API_URL}?${params.toString()}`;

@@ -23,6 +23,13 @@
 const SHEET_ID = '1knWuxEmq-LEZmMuxmGxWhj1IvvxOPE7yXXbOkuGBCNo';
 const TOKEN = 'isha-course-api-2026';
 
+// 允許的來源網域（Referer 白名單）
+const ALLOWED_ORIGINS = [
+    'https://isha-taichung.github.io',
+    'http://localhost',
+    'http://127.0.0.1'
+];
+
 // Sheet 名稱
 const SHEET_COURSES = 'Courses';
 const SHEET_ORDERS = 'Orders';
@@ -80,6 +87,15 @@ function doGet(e) {
             return jsonResponse({ success: false, error: 'Unauthorized' });
         }
         
+        // 來源驗證（Referer 檢查）- 對敏感操作進行檢查
+        const referer = e.parameter.referer || '';
+        const isSensitiveAction = ['submitOrder', 'submitPayment'].includes(action);
+        
+        if (isSensitiveAction && !isAllowedOrigin(referer)) {
+            console.warn('Blocked request from:', referer);
+            return jsonResponse({ success: false, error: 'Invalid origin' });
+        }
+        
         // 路由
         switch (action) {
             case 'getCourses':
@@ -87,9 +103,9 @@ function doGet(e) {
             case 'checkQuota':
                 return checkQuota(data.session_id);
             case 'submitOrder':
-                return submitOrder(data);
+                return submitOrderWithValidation(data);
             case 'submitPayment':
-                return submitPayment(data);
+                return submitPaymentWithValidation(data);
             default:
                 return jsonResponse({ success: true, message: 'API is running' });
         }
@@ -98,6 +114,53 @@ function doGet(e) {
         console.error('Error:', error);
         return jsonResponse({ success: false, error: error.message });
     }
+}
+
+/**
+ * 檢查來源是否在白名單中
+ */
+function isAllowedOrigin(referer) {
+    if (!referer) return false;
+    return ALLOWED_ORIGINS.some(origin => referer.startsWith(origin));
+}
+
+/**
+ * 帶驗證的訂單提交
+ */
+function submitOrderWithValidation(data) {
+    // 驗證必填欄位
+    const required = ['name', 'phone', 'email', 'session_id'];
+    for (const field of required) {
+        if (!data[field]) {
+            return jsonResponse({ success: false, error: `缺少必填欄位：${field}` });
+        }
+    }
+    
+    // 驗證 Email 格式
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+        return jsonResponse({ success: false, error: 'Email 格式不正確' });
+    }
+    
+    // 驗證電話格式（台灣手機）
+    const phoneRegex = /^09\d{8}$/;
+    if (!phoneRegex.test(data.phone.replace(/-/g, ''))) {
+        return jsonResponse({ success: false, error: '手機號碼格式不正確（請輸入09開頭的10位數字）' });
+    }
+    
+    return submitOrder(data);
+}
+
+/**
+ * 帶驗證的付款資訊提交
+ */
+function submitPaymentWithValidation(data) {
+    // 驗證必填欄位
+    if (!data.order_id) {
+        return jsonResponse({ success: false, error: '缺少訂單編號' });
+    }
+    
+    return submitPayment(data);
 }
 
 // ============================================
