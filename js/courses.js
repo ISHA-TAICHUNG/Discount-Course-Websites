@@ -79,21 +79,8 @@ function renderCourses() {
  */
 function createCourseCard(course) {
     const sessionsOptions = course.sessions.map(session => {
-        const disabled = session.remaining === 0 ? 'disabled' : '';
-        const text = session.remaining === 0
-            ? `${session.date} (已額滿)`
-            : `${session.date} (剩餘 ${session.remaining} 名)`;
-        return `<option value="${session.session_id}" ${disabled}>${text}</option>`;
+        return `<option value="${session.session_id}">${session.date}</option>`;
     }).join('');
-
-    // 取得第一個可選梯次的剩餘名額
-    const firstAvailable = course.sessions.find(s => s.remaining > 0);
-    const remaining = firstAvailable ? firstAvailable.remaining : 0;
-
-    // 名額狀態 class
-    let quotaClass = '';
-    if (remaining === 0) quotaClass = 'quota-none';
-    else if (remaining <= 5) quotaClass = 'quota-low';
 
     return `
         <div class="course-card fade-in" data-course-id="${course.course_id}">
@@ -114,13 +101,7 @@ function createCourseCard(course) {
                     <select class="form-select session-select" data-course-id="${course.course_id}">
                         <option value="">請選擇上課梯次</option>
                         ${sessionsOptions}
-                    </select>
-                </div>
-                
-                <div class="remaining-quota ${quotaClass}" id="quota-${course.course_id}">
-                    <span class="quota-icon">📊</span>
-                    <span class="quota-text">剩餘名額：<span class="quota-number">${remaining}</span> 人</span>
-                </div>
+                    </div>
                 
                 <div class="form-group">
                     <label class="form-label">報名人數</label>
@@ -128,16 +109,14 @@ function createCourseCard(course) {
                         <button type="button" class="quantity-btn minus" data-course-id="${course.course_id}">−</button>
                         <input type="number" class="form-input quantity-input" 
                                id="qty-${course.course_id}" 
-                               value="1" min="1" max="${remaining}" 
-                               data-course-id="${course.course_id}"
-                               ${remaining === 0 ? 'disabled' : ''}>
+                               value="1" min="1" max="99" 
+                               data-course-id="${course.course_id}">
                         <button type="button" class="quantity-btn plus" data-course-id="${course.course_id}">+</button>
                     </div>
                 </div>
                 
                 <button type="button" class="add-cart-btn" 
-                        data-course-id="${course.course_id}"
-                        ${remaining === 0 ? 'disabled' : ''}>
+                        data-course-id="${course.course_id}">
                     🛒 加入購物車
                 </button>
             </div>
