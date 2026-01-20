@@ -66,10 +66,38 @@ function doPost(e) {
 }
 
 /**
- * 處理 GET 請求（用於測試）
+ * 處理 GET 請求
  */
 function doGet(e) {
-    return jsonResponse({ success: true, message: 'API is running' });
+    try {
+        const params = e.parameter;
+        const token = params.token;
+        const action = params.action;
+        const data = params.data ? JSON.parse(params.data) : {};
+        
+        // Token 驗證
+        if (token !== TOKEN) {
+            return jsonResponse({ success: false, error: 'Unauthorized' });
+        }
+        
+        // 路由
+        switch (action) {
+            case 'getCourses':
+                return getCourses();
+            case 'checkQuota':
+                return checkQuota(data.session_id);
+            case 'submitOrder':
+                return submitOrder(data);
+            case 'submitPayment':
+                return submitPayment(data);
+            default:
+                return jsonResponse({ success: true, message: 'API is running' });
+        }
+        
+    } catch (error) {
+        console.error('Error:', error);
+        return jsonResponse({ success: false, error: error.message });
+    }
 }
 
 // ============================================
@@ -507,6 +535,20 @@ function fetchCourseSessions(key) {
         });
         
         const html = response.getContentText();
+        
+        // 除錯：印出 HTML 中是否包含關鍵字
+        const hasWorkLogID = html.includes('WorkLogID');
+        const has開課日期 = html.includes('開課日期');
+        const has課程費用 = html.includes('課程費用');
+        console.log(`URL: ${url.substring(0, 80)}...`);
+        console.log(`  WorkLogID: ${hasWorkLogID}, 開課日期: ${has開課日期}, 課程費用: ${has課程費用}`);
+        
+        // 嘗試找一段包含課程資訊的文字
+        const sampleMatch = html.match(/開課日期[：:].{20}/);
+        if (sampleMatch) {
+            console.log(`  Sample: ${sampleMatch[0]}`);
+        }
+        
         return parseCourseSessions(html);
         
     } catch (error) {
@@ -521,30 +563,94 @@ function fetchCourseSessions(key) {
 function parseCourseSessions(html) {
     const sessions = [];
     
-    // 匹配課程區塊：WorkLogID、開課日期、課程費用
-    // 格式：開課日期：YYYMMDD-YYYMMDD，課程費用：XX,XXX元
-    const blockPattern = /WorkLogID=(\w+)[\s\S]*?開課日期：(\d{7})-(\d{7})[\s\S]*?課程費用：([\d,]+)元/g;
+    // 實際格式：
+    // WorkLogID=11402H001007' ... 開課日期：</h3><h3>1150202-1150422</h3> ... 課程費用：</h3><h3>13,000元</h3>
+    const blockPattern = /WorkLogID=(\w+)'[\s\S]*?開課日期：<\/h3><h3>(\d{7})-(\d{7})<\/h3>[\s\S]*?課程費用：<\/h3><h3>([\d,]+)元<\/h3>/g;
     
     let match;
+    let count = 0;
     while ((match = blockPattern.exec(html)) !== null) {
         const workLogId = match[1];
         const startDate = formatROCDate(match[2]);
         const endDate = formatROCDate(match[3]);
         const price = parseInt(match[4].replace(/,/g, ''));
         
-        // 從文字推估名額
-        const remaining = estimateRemaining(html, workLogId);
+        if (count < 3) {
+            console.log(`  Matched: ${workLogId}, ${startDate}-${endDate}, $${price}`);
+        }
+        count++;
         
         sessions.push({
             sessionId: workLogId,
             date: `${startDate} - ${endDate}`,
             price: price,
-            quota: 30,  // 預設名額
-            remaining: remaining
+            quota: 30,
+            remaining: 30
         });
     }
     
+    console.log(`  Total matched: ${count} sessions`);
     return sessions;
+}
+
+/**
+ * 測試用：抓取單一課程驗證
+ */
+function testSingleCourse() {
+    const testKey = 'IGFuZCBDb3VyTmFtZSBsaWtlIE4nJeiBt+alreWuieWFqOihm+eUn+euoeeQhuWToeWuiSUnIGFuZCBVbml0Q2Q9J0gwMDEn';
+    const url = `https://isha.org.tw/Msite/tech/serch.aspx?key=${testKey}`;
+    
+    const response = UrlFetchApp.fetch(url, {
+        muteHttpExceptions: true,
+        followRedirects: true
+    });
+    
+    const html = response.getContentText();
+    console.log('HTML length:', html.length);
+    
+    // 直接測試正則表達式
+    const pattern = /WorkLogID=(\w+)'[\s\S]*?開課日期：<\/h3><h3>(\d{7})-(\d{7})<\/h3>[\s\S]*?課程費用：<\/h3><h3>([\d,]+)元<\/h3>/g;
+    
+    let match;
+    let count = 0;
+    while ((match = pattern.exec(html)) !== null && count < 5) {
+        console.log(`Match ${count + 1}: WorkLogID=${match[1]}, Date=${match[2]}-${match[3]}, Price=${match[4]}`);
+        count++;
+    }
+    
+    console.log(`Total found: ${count} matches`);
+}
+
+/**
+ * 解析多種日期格式
+ */
+function parseDateString(dateStr) {
+    // 格式1: YYYMMDD-YYYMMDD (如 1150131-1150426)
+    if (/^\d{7}-\d{7}$/.test(dateStr)) {
+        const start = dateStr.substring(0, 7);
+        const end = dateStr.substring(8);
+        return `${formatROCDate(start)} - ${formatROCDate(end)}`;
+    }
+    
+    // 格式2: YYY.MM.DD (如 115.01.22)
+    if (/^\d{3}\.\d{2}\.\d{2}$/.test(dateStr)) {
+        const parts = dateStr.split('.');
+        const year = parseInt(parts[0]) + 1911;
+        return `${year}/${parts[1]}/${parts[2]}`;
+    }
+    
+    // 格式3: YYY/MM/DD-YYY/MM/DD
+    if (/^\d{3}\/\d{2}\/\d{2}-\d{3}\/\d{2}\/\d{2}$/.test(dateStr)) {
+        const [start, end] = dateStr.split('-');
+        const startParts = start.split('/');
+        const endParts = end.split('/');
+        const startYear = parseInt(startParts[0]) + 1911;
+        const endYear = parseInt(endParts[0]) + 1911;
+        return `${startYear}/${startParts[1]}/${startParts[2]} - ${endYear}/${endParts[1]}/${endParts[2]}`;
+    }
+    
+    // 其他格式直接返回
+    return dateStr;
 }
 
 /**

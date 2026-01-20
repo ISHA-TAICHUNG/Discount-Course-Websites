@@ -6,20 +6,23 @@
 
 const API = {
     /**
-     * 發送 POST 請求至 Apps Script
+     * 發送請求至 Apps Script
+     * 使用 GET 請求避開 CORS preflight 問題
      */
     async request(action, data = {}) {
         try {
-            const response = await fetch(CONFIG.API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    token: CONFIG.API_TOKEN,
-                    action: action,
-                    ...data
-                })
+            // 建立查詢參數
+            const params = new URLSearchParams({
+                token: CONFIG.API_TOKEN,
+                action: action,
+                data: JSON.stringify(data)
+            });
+
+            const url = `${CONFIG.API_URL}?${params.toString()}`;
+
+            const response = await fetch(url, {
+                method: 'GET',
+                redirect: 'follow'
             });
 
             if (!response.ok) {
