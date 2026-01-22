@@ -8,7 +8,8 @@
     <title>購物車 - 初訓課程報名系統</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -18,13 +19,23 @@
     <header class="header">
         <div class="container header-content">
             <a href="index.html" class="logo">
-                <div class="logo-icon">📚</div>
+                <div class="logo-icon">
+                    <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                </div>
                 <span class="logo-text">職安初訓課程</span>
             </a>
             <nav class="nav">
                 <a href="index.html" class="nav-link">課程總覽</a>
                 <a href="cart.html" class="cart-btn">
-                    🛒 購物車
+                    <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    購物車
                     <span class="cart-badge" style="display: none;">0</span>
                 </a>
             </nav>
@@ -36,13 +47,28 @@
         <div class="container">
             <!-- Page Title -->
             <div class="page-title">
-                <h1>🛒 購物車</h1>
+                <h1>
+                    <svg class="icon-svg icon-lg" viewBox="0 0 24 24"
+                        style="display: inline; vertical-align: middle; margin-right: 8px;" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    購物車
+                </h1>
                 <p>確認您的課程選購項目</p>
             </div>
 
             <!-- Empty State -->
             <div id="emptyState" class="empty-state" style="display: none;">
-                <div class="icon">🛒</div>
+                <div class="icon">
+                    <svg class="icon-svg icon-2xl" viewBox="0 0 24 24" style="color: var(--gray-400);"
+                        aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </div>
                 <h3>購物車是空的</h3>
                 <p>快去挑選課程吧！</p>
                 <a href="index.html" class="btn">瀏覽課程</a>
@@ -70,7 +96,14 @@
                     </div>
                     <div class="summary-row" id="discountRow" style="display: none;">
                         <span>
-                            <span class="discount-badge">🎉 8 折優惠</span>
+                            <span class="discount-badge">
+                                <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                                    <line x1="19" y1="5" x2="5" y2="19"></line>
+                                    <circle cx="6.5" cy="6.5" r="2.5"></circle>
+                                    <circle cx="17.5" cy="17.5" r="2.5"></circle>
+                                </svg>
+                                8 折優惠
+                            </span>
                         </span>
                         <span class="discount-amount" id="discountAmount">-$0</span>
                     </div>
@@ -80,8 +113,13 @@
                     </div>
 
                     <div id="discountHint"
-                        style="margin-top: 16px; padding: 12px; background: #fff3cd; border-radius: 8px; font-size: 14px; display: none;">
-                        💡 <strong>優惠提示：</strong>報名 2 門以上課程，或同課程 2 人以上報名，即享 8 折優惠！
+                        style="margin-top: 16px; padding: 12px; background: var(--warning-light); border-radius: 8px; font-size: 14px; display: none; align-items: flex-start; gap: 8px;">
+                        <svg class="icon-svg icon-sm" viewBox="0 0 24 24"
+                            style="color: var(--warning); flex-shrink: 0; margin-top: 2px;" aria-hidden="true">
+                            <line x1="12" y1="2" x2="12" y2="12"></line>
+                            <circle cx="12" cy="17" r="1"></circle>
+                        </svg>
+                        <span><strong>優惠提示：</strong>報名 2 門以上課程，或同課程 2 人以上報名，即享 8 折優惠！</span>
                     </div>
 
                     <button type="button" class="checkout-btn" id="checkoutBtn">
@@ -91,6 +129,18 @@
             </div>
         </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p class="footer-text">© 2026 職業安全衛生初訓課程報名系統。保留所有權利。</p>
+            <div class="footer-links">
+                <a href="mailto:service@example.com">聯絡我們</a>
+                <a href="#">隱私權政策</a>
+                <a href="#">服務條款</a>
+            </div>
+        </div>
+    </footer>
 
     <!-- Scripts -->
     <script src="js/config.js"></script>

@@ -47,7 +47,7 @@ function createCartItem(item, index) {
         <div class="cart-item" data-index="${index}">
             <div class="item-info">
                 <h3>${Utils.escapeHtml(item.course_name)}</h3>
-                <p>📍 ${Utils.escapeHtml(item.location)} ｜ 📅 ${Utils.escapeHtml(item.session_date)}</p>
+                <p><svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${Utils.escapeHtml(item.location)} ｜ <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> ${Utils.escapeHtml(item.session_date)}</p>
             </div>
             <div class="item-price">$${Utils.formatCurrency(item.price)}</div>
             <div class="item-quantity">
@@ -60,7 +60,7 @@ function createCartItem(item, index) {
                 </div>
             </div>
             <div class="item-subtotal">$${Utils.formatCurrency(item.price * item.quantity)}</div>
-            <button type="button" class="remove-btn" data-index="${index}" title="移除">✕</button>
+            <button type="button" class="remove-btn" data-index="${index}" title="移除" aria-label="移除此項目"><svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
         </div>
     `;
 }

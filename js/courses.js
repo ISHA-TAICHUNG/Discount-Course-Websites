@@ -101,7 +101,8 @@ function createCourseCard(course) {
                     <select class="form-select session-select" data-course-id="${course.course_id}">
                         <option value="">請選擇上課梯次</option>
                         ${sessionsOptions}
-                    </div>
+                    </select>
+                </div>
                 
                 <div class="form-group">
                     <label class="form-label">報名人數</label>
@@ -117,7 +118,12 @@ function createCourseCard(course) {
                 
                 <button type="button" class="add-cart-btn" 
                         data-course-id="${course.course_id}">
-                    🛒 加入購物車
+                    <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    加入購物車
                 </button>
             </div>
         </div>

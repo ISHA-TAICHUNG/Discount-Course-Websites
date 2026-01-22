@@ -44,7 +44,7 @@ function renderOrderSummary() {
             <div>
                 <strong>${Utils.escapeHtml(item.course_name)}</strong>
                 <p style="font-size: 14px; color: #5f6368; margin-top: 4px;">
-                    📍 ${Utils.escapeHtml(item.location)} ｜ 📅 ${Utils.escapeHtml(item.session_date)} ｜ 👥 ${item.quantity} 人
+                    <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${Utils.escapeHtml(item.location)} ｜ <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> ${Utils.escapeHtml(item.session_date)} ｜ <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> ${item.quantity} 人
                 </p>
             </div>
             <div style="font-weight: 600;">$${Utils.formatCurrency(item.price * item.quantity)}</div>
@@ -55,7 +55,7 @@ function renderOrderSummary() {
     if (orderData.hasDiscount) {
         discountHtml = `
             <div style="display: flex; justify-content: space-between; padding: 12px 0; color: #1e8e3e;">
-                <span><span style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-right: 8px;">🎉 8 折優惠</span>折扣金額</span>
+                <span><span style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%); color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-right: 8px;"><svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;width:14px;height:14px;"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg> 8 折優惠</span>折扣金額</span>
                 <span>-$${Utils.formatCurrency(orderData.discountAmount)}</span>
             </div>
         `;
@@ -71,7 +71,7 @@ function renderOrderSummary() {
             </div>
         </div>
         <p style="margin-top: 16px; font-size: 14px; color: #5f6368;">
-            📌 請依照報名人數填寫 <strong>${totalPersons} 位</strong>受訓人員資料
+            <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true" style="display:inline;vertical-align:middle;"><line x1="12" y1="17" x2="12" y2="11"></line><line x1="12" y1="7" x2="12" y2="7"></line><circle cx="12" cy="12" r="10"></circle></svg> 請依照報名人數填寫 <strong>${totalPersons} 位</strong>受訓人員資料
         </p>
     `;
 }
