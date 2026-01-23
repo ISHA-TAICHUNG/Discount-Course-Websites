@@ -104,6 +104,18 @@ function createCourseCard(course) {
                     </select>
                 </div>
                 
+                <div class="remaining-quota" id="quota-${course.course_id}">
+                    <span class="quota-icon">
+                        <svg class="icon-svg icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </span>
+                    <span class="quota-text">剩餘名額：<span class="quota-number">--</span> 名</span>
+                </div>
+                
                 <div class="form-group">
                     <label class="form-label">報名人數</label>
                     <div class="quantity-wrapper">
@@ -205,8 +217,14 @@ function updateQuotaDisplay(courseId, sessionId) {
     const qtyInput = document.getElementById(`qty-${courseId}`);
     const addBtn = document.querySelector(`.add-cart-btn[data-course-id="${courseId}"]`);
 
+    // 防止元素不存在時報錯
+    if (!quotaDiv || !qtyInput || !addBtn) return;
+
+    const quotaNumber = quotaDiv.querySelector('.quota-number');
+    if (!quotaNumber) return;
+
     // 更新名額顯示
-    quotaDiv.querySelector('.quota-number').textContent = remaining;
+    quotaNumber.textContent = remaining;
 
     // 更新 class
     quotaDiv.classList.remove('quota-low', 'quota-none');
